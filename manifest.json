@@ -6,11 +6,12 @@
   "manifest_version": 2,
   "content_scripts": [
     {
+      "css": ["inject.css"],
       "js": ["contentscript.js"],
       "matches": ["https://*/*"]
     }
   ],
-  "web_accessible_resources": ["script.js"],
+  "web_accessible_resources": ["inject.js"],
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
