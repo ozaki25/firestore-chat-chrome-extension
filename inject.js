@@ -72,18 +72,21 @@ function appendMessage({ content }) {
 }
 
 function removeMessage() {
-  const oldElement = document.body.getElementsByClassName('inject-h1')[0];
-  if (oldElement) document.body.removeChild(oldElement);
-
-  const fullScreenElement = document.getElementsByClassName(
+  const fullScreenElements = document.getElementsByClassName(
     'punch-full-screen-element',
   );
-  if (fullScreenElement.length) {
-    const oldElementInFullScreen = fullScreenElement[0].getElementsByClassName(
+  if (fullScreenElements.length) {
+    console.log(fullScreenElements);
+    const oldElementInFullScreen = fullScreenElements[0].getElementsByClassName(
       'inject-h1',
-    )[0];
-    if (oldElementInFullScreen) fullScreenElement[0].removeChild(oldElement);
+    );
+    if (oldElementInFullScreen.length) {
+      fullScreenElements[0].removeChild(oldElementInFullScreen[0]);
+    }
   }
+
+  const oldElements = document.body.getElementsByClassName('inject-h1');
+  if (oldElements.length) document.body.removeChild(oldElements[0]);
 }
 
 async function excute() {
