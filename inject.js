@@ -62,7 +62,7 @@ function removeMessage() {
 
 class Firestore {
   constructor({ firebase }) {
-    this.message = '';
+    this.message = { content: '' };
     this.firebase = firebase;
     this.initFirebase();
     this.setDbRef();
