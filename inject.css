@@ -2,6 +2,22 @@
     position: fixed;
     z-index: 2147483647;
     bottom: 0;
+    left: 0;
+    animation-duration: 1s;
+    animation-name: slideInRight;
     color: darkblue;
     font-size: 64px;
+    transition: 1s;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100vw);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }

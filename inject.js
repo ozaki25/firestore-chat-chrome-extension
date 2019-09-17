@@ -34,7 +34,15 @@ function initFirebase() {
 async function getMessages() {
   try {
     const db = firebase.firestore();
-    const dbRef = db.collection('messages');
+    const dbRef = db.collection('messages').orderBy('timestamp');
+
+    dbRef.onSnapshot(function(snapshot) {
+      let messages2 = [];
+      snapshot.docs.forEach(doc => messages2.push(doc.data()));
+      console.log({ messages2 });
+      appendMessage(messages2[messages2.length - 1]);
+    });
+
     const snapshots = await dbRef.get();
     let messages = [];
     snapshots.forEach(doc => messages.push(doc.data()));
@@ -46,11 +54,17 @@ async function getMessages() {
 }
 
 function appendMessage({ content }) {
+  removeMessage();
   const h1 = document.createElement('h1');
   const text = document.createTextNode(content);
   h1.appendChild(text);
   h1.setAttribute('class', 'inject-h1');
   document.body.appendChild(h1);
+}
+
+function removeMessage() {
+  const oldElement = document.getElementsByClassName('inject-h1')[0];
+  if (oldElement) document.body.removeChild(oldElement);
 }
 
 async function excute() {
