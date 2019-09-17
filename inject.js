@@ -11,10 +11,15 @@ function injectScripts(src) {
   s.onload = function() {
     this.remove();
   };
-  (document.head || document.documentElement).appendChild(s);
+  try {
+    (document.head || document.documentElement).appendChild(s);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function preventInjectFirebase() {
+  // ライブラリの読み込みが完了してから後続処理に進むようにする
   if (typeof firebase === 'undefined') {
     if (retryCount > 10) return;
     retryCount += 1;
@@ -24,80 +29,86 @@ function preventInjectFirebase() {
   }
 }
 
-function initFirebase() {
-  firebase.initializeApp({
-    apiKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    projectId: 'xxxxxxx',
-  });
-}
-
-async function getMessages() {
-  try {
-    const db = firebase.firestore();
-    const dbRef = db.collection('messages').orderBy('timestamp');
-
-    dbRef.onSnapshot(function(snapshot) {
-      let messages2 = [];
-      snapshot.docs.forEach(doc => messages2.push(doc.data()));
-      console.log({ messages2 });
-      appendMessage(messages2[messages2.length - 1]);
-    });
-
-    const snapshots = await dbRef.get();
-    let messages = [];
-    snapshots.forEach(doc => messages.push(doc.data()));
-    console.log({ messages });
-    return messages;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 function appendMessage({ content }) {
-  removeMessage();
-  const fullScreenElement = document.getElementsByClassName(
-    'punch-full-screen-element',
-  );
-  const isFullScreen = !!fullScreenElement.length;
-  console.log({ isFullScreen });
+  const fullScreenElement = document.querySelector('.punch-full-screen-element');
+
   const h1 = document.createElement('h1');
   const text = document.createTextNode(content);
   h1.appendChild(text);
   h1.setAttribute('class', 'inject-h1');
-  if (isFullScreen) {
-    fullScreenElement[0].appendChild(h1);
+
+  if (fullScreenElement) {
+    fullScreenElement.appendChild(h1);
   } else {
     document.body.appendChild(h1);
   }
 }
 
 function removeMessage() {
-  const fullScreenElements = document.getElementsByClassName(
-    'punch-full-screen-element',
-  );
-  if (fullScreenElements.length) {
-    console.log(fullScreenElements);
-    const oldElementInFullScreen = fullScreenElements[0].getElementsByClassName(
-      'inject-h1',
-    );
-    if (oldElementInFullScreen.length) {
-      fullScreenElements[0].removeChild(oldElementInFullScreen[0]);
+  const fullScreenElement = document.querySelector('.punch-full-screen-element');
+
+  if (fullScreenElement) {
+    const oldMessageInFullScreen = fullScreenElement.querySelector('.inject-h1');
+    if (oldMessageInFullScreen) {
+      fullScreenElement.removeChild(oldMessageInFullScreen);
     }
   }
 
-  const oldElements = document.body.getElementsByClassName('inject-h1');
-  if (oldElements.length) document.body.removeChild(oldElements[0]);
+  const oldMessage = document.body.querySelector('.inject-h1');
+  if (oldMessage) {
+    document.body.removeChild(oldMessage);
+  }
 }
 
-async function excute() {
-  initFirebase();
-  const messages = await getMessages();
-  if (!messages) {
-    appendMessage({ content: 'Empty' });
-    return;
+class Firestore {
+  constructor({ firebase }) {
+    this.message = '';
+    this.firebase = firebase;
+    this.initFirebase();
+    this.setDbRef();
+    this.setListener();
   }
-  const latestMessage = messages[messages.length - 1];
-  appendMessage(latestMessage);
+
+  initFirebase() {
+    this.firebase.initializeApp({
+      apiKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      projectId: 'xxxxxxx',
+    });
+  }
+
+  setDbRef() {
+    this.dbRef = this.firebase
+      .firestore()
+      .collection('messages')
+      .orderBy('timestamp', 'desc')
+      .limit(1);
+  }
+
+  setListener() {
+    this.dbRef.onSnapshot(snapshot => {
+      // limit(1)なので1件しか来ない
+      snapshot.docs.forEach(doc => this.setMessage(doc.data()));
+    });
+  }
+
+  setMessage(message) {
+    console.log({ message });
+    this.message = message;
+    this.render();
+  }
+
+  render() {
+    removeMessage();
+    appendMessage(this.message);
+  }
+}
+
+function excute() {
+  try {
+    new Firestore({ firebase });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function main() {
