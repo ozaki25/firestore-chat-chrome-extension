@@ -55,16 +55,35 @@ async function getMessages() {
 
 function appendMessage({ content }) {
   removeMessage();
+  const fullScreenElement = document.getElementsByClassName(
+    'punch-full-screen-element',
+  );
+  const isFullScreen = !!fullScreenElement.length;
+  console.log({ isFullScreen });
   const h1 = document.createElement('h1');
   const text = document.createTextNode(content);
   h1.appendChild(text);
   h1.setAttribute('class', 'inject-h1');
-  document.body.appendChild(h1);
+  if (isFullScreen) {
+    fullScreenElement[0].appendChild(h1);
+  } else {
+    document.body.appendChild(h1);
+  }
 }
 
 function removeMessage() {
-  const oldElement = document.getElementsByClassName('inject-h1')[0];
+  const oldElement = document.body.getElementsByClassName('inject-h1')[0];
   if (oldElement) document.body.removeChild(oldElement);
+
+  const fullScreenElement = document.getElementsByClassName(
+    'punch-full-screen-element',
+  );
+  if (fullScreenElement.length) {
+    const oldElementInFullScreen = fullScreenElement[0].getElementsByClassName(
+      'inject-h1',
+    )[0];
+    if (oldElementInFullScreen) fullScreenElement[0].removeChild(oldElement);
+  }
 }
 
 async function excute() {
