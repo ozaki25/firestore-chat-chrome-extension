@@ -56,11 +56,13 @@ function removeMessage() {
 
 class Firestore {
   constructor({ firebase }) {
-    this.message = { content: '' };
+    this.messages = [];
+    this.prepend = false;
     this.firebase = firebase;
     this.initFirebase();
     this.setDbRef();
     this.setListener();
+    this.render();
   }
 
   initFirebase() {
@@ -81,19 +83,31 @@ class Firestore {
   setListener() {
     this.dbRef.onSnapshot(snapshot => {
       // limit(1)なので1件しか来ない
-      snapshot.docs.forEach(doc => this.setMessage(doc.data()));
+      snapshot.docs.forEach(doc => this.addMessage(doc.data()));
     });
   }
 
-  setMessage(message) {
-    console.log({ message });
-    this.message = message;
-    this.render();
+  addMessage(message) {
+    console.log('new message', { message }, 'old messagees', { messages: this.messages });
+    const oldMessages = this.messages;
+    this.messages = [...oldMessages, message];
+    if (!oldMessages.length) this.render();
   }
 
   render() {
+    if (this.prepend || !this.messages.length) return;
+
+    const message = this.messages[0];
+    this.prepend = true;
+    this.messages = [...this.messages.slice(1)];
+
     removeMessage();
-    appendMessage(this.message);
+    appendMessage(message);
+
+    setTimeout(() => {
+      this.prepend = false;
+      this.render();
+    }, 10000);
   }
 }
 
