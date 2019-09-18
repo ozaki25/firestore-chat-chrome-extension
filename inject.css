@@ -1,23 +1,37 @@
-.inject-h1 {
-    position: fixed;
-    z-index: 2147483647;
-    bottom: 0;
-    left: 0;
-    animation-duration: 1s;
-    animation-name: slideInRight;
-    color: darkblue;
-    font-size: 64px;
-    transition: 1s;
+#inject-background {
+  background-color: #e3f2fd;
+  position: fixed;
+  z-index: 2147483647;
+  padding: 0 15px;
+  margin: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 95px;
+}
+
+#inject-text {
+  color: #263238;
+  font-size: 64px;
+  animation-duration: 1s;
+  animation-name: slideInRight;
+  transition: 1s;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0;
+  margin: 0;
+  line-height: normal;
 }
 
 @keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(100vw);
-    }
+  from {
+    opacity: 0;
+    transform: translateX(100vw);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

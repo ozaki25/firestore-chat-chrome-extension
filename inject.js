@@ -32,31 +32,25 @@ function preventInjectFirebase() {
 function appendMessage({ content }) {
   const fullScreenElement = document.querySelector('.punch-full-screen-element');
 
-  const h1 = document.createElement('h1');
+  const div = document.createElement('div');
+  const p = document.createElement('p');
   const text = document.createTextNode(content);
-  h1.appendChild(text);
-  h1.setAttribute('class', 'inject-h1');
+  p.appendChild(text);
+  p.setAttribute('id', 'inject-text');
+  div.appendChild(p);
+  div.setAttribute('id', 'inject-background');
 
   if (fullScreenElement) {
-    fullScreenElement.appendChild(h1);
+    fullScreenElement.appendChild(div);
   } else {
-    document.body.appendChild(h1);
+    document.body.appendChild(div);
   }
 }
 
 function removeMessage() {
-  const fullScreenElement = document.querySelector('.punch-full-screen-element');
-
-  if (fullScreenElement) {
-    const oldMessageInFullScreen = fullScreenElement.querySelector('.inject-h1');
-    if (oldMessageInFullScreen) {
-      fullScreenElement.removeChild(oldMessageInFullScreen);
-    }
-  }
-
-  const oldMessage = document.body.querySelector('.inject-h1');
-  if (oldMessage) {
-    document.body.removeChild(oldMessage);
+  const textElement = document.querySelector('#inject-text');
+  if (textElement) {
+    textElement.parentNode.removeChild(textElement);
   }
 }
 
