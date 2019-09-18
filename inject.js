@@ -48,9 +48,9 @@ function appendMessage({ content }) {
 }
 
 function removeMessage() {
-  const textElement = document.querySelector('#inject-text');
-  if (textElement) {
-    textElement.parentNode.removeChild(textElement);
+  const element = document.querySelector('#inject-background');
+  if (element) {
+    element.parentNode.removeChild(element);
   }
 }
 
