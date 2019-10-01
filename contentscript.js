@@ -9,7 +9,12 @@ function inject() {
 
 inject();
 
-chrome.runtime.onMessage.addListener(function() {
-  const event = new Event('unsubscribe-firestore');
-  document.dispatchEvent(event);
+chrome.runtime.onMessage.addListener(function(request) {
+  const { checked } = request;
+  if (checked) {
+    inject();
+  } else {
+    const event = new Event('unsubscribe-firestore');
+    document.dispatchEvent(event);
+  }
 });
