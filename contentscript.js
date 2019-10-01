@@ -8,3 +8,8 @@ function inject() {
 }
 
 inject();
+
+chrome.runtime.onMessage.addListener(function() {
+  const event = new Event('unsubscribe-firestore');
+  document.dispatchEvent(event);
+});

@@ -11,11 +11,7 @@ function injectScripts(src) {
   s.onload = function() {
     this.remove();
   };
-  try {
-    (document.head || document.documentElement).appendChild(s);
-  } catch (e) {
-    console.log(e);
-  }
+  (document.head || document.documentElement).appendChild(s);
 }
 
 function preventInjectFirebase() {
@@ -81,10 +77,16 @@ class Firestore {
   }
 
   setListener() {
-    this.dbRef.onSnapshot(snapshot => {
+    this.unsubscribe = this.dbRef.onSnapshot(snapshot => {
       // limit(1)なので1件しか来ない
       snapshot.docs.forEach(doc => this.addMessage(doc.data()));
     });
+    const removeListener = e => {
+      console.log('unsubscribe');
+      this.unsubscribe();
+      removeMessage();
+    };
+    document.addEventListener('unsubscribe-firestore', removeListener);
   }
 
   addMessage(message) {
