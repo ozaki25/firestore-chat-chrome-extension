@@ -1,5 +1,4 @@
 const checkbox = document.querySelector('#activate');
-let checked = false;
 
 function onLoad() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {

@@ -27,9 +27,18 @@ function onMessage({ isChecked }) {
   });
 }
 
+function onChangeStorage({ checked }) {
+  const { newValue } = checked;
+  const { hostname } = location;
+  const eventName = newValue[hostname] ? 'subscribe-firestore' : 'unsubscribe-firestore';
+  const event = new Event(eventName);
+  document.dispatchEvent(event);
+}
+
 // listeners
 document.addEventListener('initialized', onInit);
 chrome.runtime.onMessage.addListener(onMessage);
+chrome.storage.onChanged.addListener(onChangeStorage);
 
 // executes
 inject();
