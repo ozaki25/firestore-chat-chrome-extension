@@ -2,7 +2,7 @@
   "name": "Realtime show messages",
   "version": "1.0",
   "description": "",
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
   "manifest_version": 2,
   "content_scripts": [
     {
