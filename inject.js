@@ -1,10 +1,13 @@
+// valiables
 let retryCount = 0;
+let initialized = false;
 
 const urlList = [
   'https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js',
   'https://www.gstatic.com/firebasejs/6.3.4/firebase-firestore.js',
 ];
 
+// functions
 function injectScripts(src) {
   const s = document.createElement('script');
   s.src = src;
@@ -55,7 +58,7 @@ class Firestore {
     this.messages = [];
     this.prepend = false;
     this.firebase = firebase;
-    this.initFirebase();
+    if (!initialized) this.initFirebase();
     this.setDbRef();
     this.setListener();
     this.render();
@@ -66,6 +69,7 @@ class Firestore {
       apiKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       projectId: 'xxxxxxx',
     });
+    initialized = true;
   }
 
   setDbRef() {
@@ -85,6 +89,7 @@ class Firestore {
       console.log('unsubscribe');
       this.unsubscribe();
       removeMessage();
+      document.removeEventListener('unsubscribe-firestore', removeListener);
     };
     document.addEventListener('unsubscribe-firestore', removeListener);
   }
@@ -126,4 +131,8 @@ function main() {
   preventInjectFirebase();
 }
 
+// listeners
+document.addEventListener('subscribe-firestore', excute);
+
+// executes
 main();

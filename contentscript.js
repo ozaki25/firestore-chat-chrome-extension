@@ -1,3 +1,5 @@
+// functions
+
 function inject() {
   const s = document.createElement('script');
   s.src = chrome.runtime.getURL('inject.js');
@@ -7,14 +9,15 @@ function inject() {
   (document.head || document.documentElement).appendChild(s);
 }
 
-inject();
-
-chrome.runtime.onMessage.addListener(function(request) {
+function onMessage(request) {
   const { checked } = request;
-  if (checked) {
-    inject();
-  } else {
-    const event = new Event('unsubscribe-firestore');
-    document.dispatchEvent(event);
-  }
-});
+  const eventName = checked ? 'subscribe-firestore' : 'unsubscribe-firestore';
+  const event = new Event(eventName);
+  document.dispatchEvent(event);
+}
+
+// listeners
+chrome.runtime.onMessage.addListener(onMessage);
+
+// executes
+inject();
