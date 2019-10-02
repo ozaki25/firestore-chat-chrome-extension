@@ -9,6 +9,11 @@ function inject() {
   (document.head || document.documentElement).appendChild(s);
 }
 
+function onInit() {
+  const event = new Event('subscribe-firestore');
+  document.dispatchEvent(event);
+}
+
 function onMessage(request) {
   const { checked } = request;
   const eventName = checked ? 'subscribe-firestore' : 'unsubscribe-firestore';
@@ -17,6 +22,7 @@ function onMessage(request) {
 }
 
 // listeners
+document.addEventListener('initialized', onInit);
 chrome.runtime.onMessage.addListener(onMessage);
 
 // executes

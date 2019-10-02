@@ -8,6 +8,9 @@ const urlList = [
 ];
 
 // functions
+/**
+ * setup phase
+ */
 function injectScripts(src) {
   const s = document.createElement('script');
   s.src = src;
@@ -24,34 +27,19 @@ function preventInjectFirebase() {
     retryCount += 1;
     setTimeout(() => preventInjectFirebase(), 1000);
   } else {
-    excute();
+    const event = new Event('initialized');
+    document.dispatchEvent(event);
   }
 }
 
-function appendMessage({ content }) {
-  const fullScreenElement = document.querySelector('.punch-full-screen-element');
-
-  const div = document.createElement('div');
-  const p = document.createElement('p');
-  const text = document.createTextNode(content);
-  p.appendChild(text);
-  p.setAttribute('id', 'inject-text');
-  div.appendChild(p);
-  div.setAttribute('id', 'inject-background');
-
-  if (fullScreenElement) {
-    fullScreenElement.appendChild(div);
-  } else {
-    document.body.appendChild(div);
-  }
+function main() {
+  urlList.forEach(src => injectScripts(src));
+  preventInjectFirebase();
 }
 
-function removeMessage() {
-  const element = document.querySelector('#inject-background');
-  if (element) {
-    element.parentNode.removeChild(element);
-  }
-}
+/**
+ * execute phase
+ */
 
 class Firestore {
   constructor({ firebase }) {
@@ -118,17 +106,37 @@ class Firestore {
   }
 }
 
+function appendMessage({ content }) {
+  const fullScreenElement = document.querySelector('.punch-full-screen-element');
+
+  const div = document.createElement('div');
+  const p = document.createElement('p');
+  const text = document.createTextNode(content);
+  p.appendChild(text);
+  p.setAttribute('id', 'inject-text');
+  div.appendChild(p);
+  div.setAttribute('id', 'inject-background');
+
+  if (fullScreenElement) {
+    fullScreenElement.appendChild(div);
+  } else {
+    document.body.appendChild(div);
+  }
+}
+
+function removeMessage() {
+  const element = document.querySelector('#inject-background');
+  if (element) {
+    element.parentNode.removeChild(element);
+  }
+}
+
 function excute() {
   try {
     new Firestore({ firebase });
   } catch (e) {
     console.log(e);
   }
-}
-
-function main() {
-  urlList.forEach(src => injectScripts(src));
-  preventInjectFirebase();
 }
 
 // listeners
