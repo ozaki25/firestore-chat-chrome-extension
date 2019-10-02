@@ -4,11 +4,17 @@
     <link rel="stylesheet" href="./popup.css" />
   </head>
   <body>
-    <h3>コメントの表示設定</h3>
-    <label for="activate">
-      表示を有効化する
-      <input type="checkbox" name="activate" id="activate" />
-    </label>
+    <div class="initialized">
+      <h3>コメントの表示設定</h3>
+      <label for="activate">
+        表示を有効化する
+        <input type="checkbox" name="activate" id="activate" />
+      </label>
+    </div>
+    <div class="uninitialized">
+      <h3>初期設定が未済です</h3>
+      <p>拡張機能のオプションから初期設定を行ってください</p>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>
