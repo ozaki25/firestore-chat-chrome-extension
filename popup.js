@@ -3,16 +3,14 @@ const initialized = document.querySelector('.initialized');
 const uninitialized = document.querySelector('.uninitialized');
 
 function onLoad() {
-  chrome.storage.sync.get('apuKey', function(apiKey) {
-    chrome.storage.sync.get('projectId', function(projectId) {
-      if (apiKey && projectId) {
-        initialized.style.display = 'block';
-        uninitialized.style.display = 'none';
-      } else {
-        initialized.style.display = 'none';
-        uninitialized.style.display = 'block';
-      }
-    });
+  chrome.storage.sync.get(['apiKey', 'projectId'], function({ apiKey, projectId }) {
+    if (apiKey && projectId) {
+      initialized.style.display = 'block';
+      uninitialized.style.display = 'none';
+    } else {
+      initialized.style.display = 'none';
+      uninitialized.style.display = 'block';
+    }
   });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {

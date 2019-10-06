@@ -16,11 +16,15 @@ function onInit() {
 }
 
 function onMessage({ isChecked }) {
-  const eventName = isChecked ? 'subscribe-firestore' : 'unsubscribe-firestore';
-  const event = new Event(eventName);
-  document.dispatchEvent(event);
+  chrome.storage.sync.get(['checked', 'apiKey', 'projectId'], function({
+    checked,
+    apiKey,
+    projectId,
+  }) {
+    const eventName = isChecked ? 'subscribe-firestore' : 'unsubscribe-firestore';
+    const event = new CustomEvent(eventName, { detail: { apiKey, projectId } });
+    document.dispatchEvent(event);
 
-  chrome.storage.sync.get('checked', function({ checked }) {
     const { hostname } = location;
     chrome.storage.sync.set({ checked: { ...checked, [hostname]: isChecked } });
     console.log({ checked: { ...checked, [hostname]: isChecked } });

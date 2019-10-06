@@ -42,21 +42,18 @@ function main() {
  */
 
 class Firestore {
-  constructor({ firebase }) {
+  constructor({ firebase, apiKey, projectId }) {
     this.messages = [];
     this.prepend = false;
     this.firebase = firebase;
-    if (!initialized) this.initFirebase();
+    if (!initialized) this.initFirebase({ apiKey, projectId });
     this.setDbRef();
     this.setListener();
     this.render();
   }
 
-  initFirebase() {
-    this.firebase.initializeApp({
-      apiKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      projectId: 'xxxxxxx',
-    });
+  initFirebase({ apiKey, projectId }) {
+    this.firebase.initializeApp({ apiKey, projectId });
     initialized = true;
   }
 
@@ -131,9 +128,10 @@ function removeMessage() {
   }
 }
 
-function excute() {
+function excute(e) {
   try {
-    new Firestore({ firebase });
+    const { apiKey, projectId } = e.detail;
+    new Firestore({ firebase, apiKey, projectId });
   } catch (e) {
     console.log(e);
   }
