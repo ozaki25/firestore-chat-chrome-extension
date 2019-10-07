@@ -116,7 +116,7 @@ class Firestore {
     setTimeout(() => {
       this.prepend = false;
       this.render();
-    }, 8000);
+    }, 4000);
   }
 }
 
