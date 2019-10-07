@@ -2,6 +2,9 @@
   <head>
     <meta charset="utf-8" />
     <style>
+      .container {
+        padding: 10px 15px;
+      }
       .form-item {
         margin-bottom: 15px;
       }
@@ -37,7 +40,7 @@
   </head>
 
   <body>
-    <div>
+    <div class="container">
       <div class="form-item">
         <label>API Key</label>
         <br />
@@ -51,8 +54,8 @@
       <div class="form-item">
         <button id="submit" class="form-button">保存</button>
       </div>
+      <button id="clear" class="form-button">クリア</button>
     </div>
-    <button id="clear" class="form-button">クリア</button>
   </body>
   <script src="options.js"></script>
 </html>

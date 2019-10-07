@@ -1,20 +1,16 @@
 {
   "name": "Realtime show messages",
   "version": "1.0",
-  "description": "",
-  "permissions": ["activeTab", "storage"],
   "manifest_version": 2,
-  "content_scripts": [
-    {
-      "css": ["inject.css"],
-      "js": ["contentscript.js"],
-      "matches": ["https://*/*"]
-    }
-  ],
-  "options_page": "options.html",
-  "web_accessible_resources": ["inject.js"],
+  "description": "",
+  "icons": {
+    "16": "images/get_started16.png",
+    "32": "images/get_started32.png",
+    "48": "images/get_started48.png",
+    "128": "images/get_started128.png"
+  },
   "browser_action": {
-    "default_popup": "popup.html",
+    "default_popup": "src/popup.html",
     "default_icon": {
       "16": "images/get_started16.png",
       "32": "images/get_started32.png",
@@ -22,11 +18,15 @@
       "128": "images/get_started128.png"
     }
   },
-  "icons": {
-    "16": "images/get_started16.png",
-    "32": "images/get_started32.png",
-    "48": "images/get_started48.png",
-    "128": "images/get_started128.png"
-  },
-  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
+  "content_scripts": [
+    {
+      "css": ["src/inject.css"],
+      "js": ["src/contentscript.js"],
+      "matches": ["https://*/*"]
+    }
+  ],
+  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+  "options_page": "src/options.html",
+  "permissions": ["activeTab", "storage"],
+  "web_accessible_resources": ["src/inject.js"]
 }
