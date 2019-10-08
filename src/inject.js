@@ -1,46 +1,7 @@
 // valiables
-let retryCount = 0;
 let initialized = false;
 
-const urlList = [
-  'https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js',
-  'https://www.gstatic.com/firebasejs/6.3.4/firebase-firestore.js',
-];
-
 // functions
-/**
- * setup phase
- */
-function injectScripts(src) {
-  const s = document.createElement('script');
-  s.src = src;
-  s.onload = function() {
-    this.remove();
-  };
-  (document.head || document.documentElement).appendChild(s);
-}
-
-function preventInjectFirebase() {
-  // ライブラリの読み込みが完了してから後続処理に進むようにする
-  if (typeof firebase === 'undefined') {
-    if (retryCount > 10) return;
-    retryCount += 1;
-    setTimeout(() => preventInjectFirebase(), 1000);
-  } else {
-    const event = new Event('initialized');
-    document.dispatchEvent(event);
-  }
-}
-
-function main() {
-  urlList.forEach(src => injectScripts(src));
-  preventInjectFirebase();
-}
-
-/**
- * execute phase
- */
-
 class Firestore {
   constructor({ firebase, apiKey, projectId }) {
     this.messages = [];
@@ -50,6 +11,7 @@ class Firestore {
     if (!initialized) this.initFirebase({ apiKey, projectId });
     this.setDbRef();
     this.setListener();
+    this.render();
   }
 
   initFirebase({ apiKey, projectId }) {
@@ -156,6 +118,3 @@ function excute(e) {
 
 // listeners
 document.addEventListener('subscribe-firestore', excute);
-
-// executes
-main();

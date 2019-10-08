@@ -28,5 +28,9 @@
   "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
   "options_page": "src/options.html",
   "permissions": ["activeTab", "storage"],
-  "web_accessible_resources": ["src/inject.js"]
+  "web_accessible_resources": [
+    "src/inject.js",
+    "src/libs/firebase-app.js",
+    "src/libs/firebase-firestore.js"
+  ]
 }

@@ -1,11 +1,26 @@
+// variables
+let retryCount = 0;
+const urlList = ['src/libs/firebase-app.js', 'src/libs/firebase-firestore.js', 'src/inject.js'];
+
 // functions
-function inject() {
+function injectScripts(src) {
   const s = document.createElement('script');
-  s.src = chrome.runtime.getURL('src/inject.js');
+  s.src = chrome.runtime.getURL(src);
   s.onload = function() {
     this.remove();
+    const event = new Event('script-loaded');
+    document.dispatchEvent(event);
   };
   (document.head || document.documentElement).appendChild(s);
+}
+
+function main() {
+  let count = 0;
+  document.addEventListener('script-loaded', () => {
+    count += 1;
+    if (count === urlList.length) onInit();
+  });
+  urlList.forEach(src => injectScripts(src));
 }
 
 function onInit() {
@@ -40,9 +55,8 @@ function onChangeStorage({ checked }) {
 }
 
 // listeners
-document.addEventListener('initialized', onInit);
 chrome.runtime.onMessage.addListener(onMessage);
 chrome.storage.onChanged.addListener(onChangeStorage);
 
 // executes
-inject();
+main();
