@@ -1,12 +1,14 @@
 // valiables
 let initialized = false;
+const DISPLAY_TIME = 8000;
+const STOCK_NUMBER = 10;
 
 // functions
 class Firestore {
   constructor({ firebase, apiKey, projectId, displayTime, stockNumber, infiniteLoop }) {
     console.log({ apiKey, projectId, displayTime, stockNumber, infiniteLoop });
-    this.displayTime = displayTime;
-    this.stockNumber = stockNumber;
+    this.displayTime = displayTime || DISPLAY_TIME;
+    this.stockNumber = stockNumber || STOCK_NUMBER;
     this.infiniteLoop = infiniteLoop;
     this.messages = [];
     this.stock = [];
