@@ -83,7 +83,7 @@ class Firestore {
       this.stock = [...this.stock.slice(0, -1)];
       removeMessage();
       appendMessage(message);
-    } else {
+    } else if (this.savedStock.length) {
       if (this.infiniteLoop) {
         this.addStock(this.savedStock);
         this.render();
