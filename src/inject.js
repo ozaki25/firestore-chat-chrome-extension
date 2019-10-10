@@ -89,6 +89,8 @@ class Firestore {
         this.render();
       }
       return;
+    } else {
+      return;
     }
 
     setTimeout(() => {
