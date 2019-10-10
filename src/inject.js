@@ -3,7 +3,11 @@ let initialized = false;
 
 // functions
 class Firestore {
-  constructor({ firebase, apiKey, projectId }) {
+  constructor({ firebase, apiKey, projectId, displayTime, stockNumber, infiniteLoop }) {
+    console.log({ apiKey, projectId, displayTime, stockNumber, infiniteLoop });
+    this.displayTime = displayTime;
+    this.stockNumber = stockNumber;
+    this.infiniteLoop = infiniteLoop;
     this.messages = [];
     this.stock = [];
     this.prepend = false;
@@ -24,7 +28,7 @@ class Firestore {
       .firestore()
       .collection('messages')
       .orderBy('timestamp', 'desc')
-      .limit(10);
+      .limit(this.stockNumber);
   }
 
   setListener() {
@@ -78,7 +82,7 @@ class Firestore {
     setTimeout(() => {
       this.prepend = false;
       this.render();
-    }, 8000);
+    }, this.displayTime);
   }
 }
 
@@ -109,8 +113,8 @@ function removeMessage() {
 
 function excute(e) {
   try {
-    const { apiKey, projectId } = e.detail;
-    new Firestore({ firebase, apiKey, projectId });
+    const { apiKey, projectId, displayTime, stockNumber, infiniteLoop } = e.detail;
+    new Firestore({ firebase, apiKey, projectId, displayTime, stockNumber, infiniteLoop });
   } catch (e) {
     console.log(e);
   }
