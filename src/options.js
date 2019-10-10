@@ -12,8 +12,8 @@ function onClickSubmit(e) {
   e.preventDefault();
   const apiKey = inputApiKey.value.trim();
   const projectId = inputProjectId.value.trim();
-  const displayTime = inputDisplayTime.value;
-  const stockNumber = inputStockNumber.value;
+  const displayTime = Number(inputDisplayTime.value);
+  const stockNumber = Number(inputStockNumber.value);
   const infiniteLoop = inputInfiniteLoop.checked;
   if (!apiKey || !projectId) {
     alert('入力して下さい！！');
