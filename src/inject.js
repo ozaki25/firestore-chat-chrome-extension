@@ -12,6 +12,7 @@ class Firestore {
     this.infiniteLoop = infiniteLoop;
     this.messages = [];
     this.stock = [];
+    this.savedStock = [];
     this.prepend = false;
     this.firebase = firebase;
     if (!initialized) this.initFirebase({ apiKey, projectId });
@@ -38,6 +39,7 @@ class Firestore {
       const messages = snapshot.docs.map(doc => doc.data());
       this.addMessage(messages[0]);
       this.addStock(messages);
+      this.addSavedStock(messages);
     });
     const removeListener = e => {
       console.log('unsubscribe');
@@ -61,6 +63,10 @@ class Firestore {
     this.stock = messages;
   }
 
+  addSavedStock(messages) {
+    this.savedStock = messages;
+  }
+
   render() {
     if (this.prepend) return;
 
@@ -71,14 +77,18 @@ class Firestore {
       this.messages = [...this.messages.slice(1)];
       removeMessage();
       appendMessage(message);
-    } else {
-      // 新着メッセージがなけばストッししておいた過去分を表示
-      if (!this.stock.length) return;
+    } else if (this.stock.length) {
       const message = this.stock[this.stock.length - 1];
       this.prepend = true;
       this.stock = [...this.stock.slice(0, -1)];
       removeMessage();
       appendMessage(message);
+    } else {
+      if (this.infiniteLoop) {
+        this.addStock(this.savedStock);
+        this.render();
+      }
+      return;
     }
 
     setTimeout(() => {
