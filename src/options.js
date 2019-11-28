@@ -1,4 +1,4 @@
-// vvariables
+// variables
 const button = document.querySelector('#submit');
 const inputApiKey = document.querySelector('#apiKey');
 const inputProjectId = document.querySelector('#projectId');
