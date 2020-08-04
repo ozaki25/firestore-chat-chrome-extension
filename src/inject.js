@@ -5,8 +5,17 @@ const STOCK_NUMBER = 10;
 
 // functions
 class Firestore {
-  constructor({ firebase, apiKey, projectId, displayTime, stockNumber, infiniteLoop }) {
-    console.log({ apiKey, projectId, displayTime, stockNumber, infiniteLoop });
+  constructor({
+    firebase,
+    apiKey,
+    projectId,
+    collectionName,
+    displayTime,
+    stockNumber,
+    infiniteLoop,
+  }) {
+    console.log({ apiKey, projectId, collectionName, displayTime, stockNumber, infiniteLoop });
+    this.collectionName = collectionName || 'messages';
     this.displayTime = displayTime || DISPLAY_TIME;
     this.stockNumber = stockNumber || STOCK_NUMBER;
     this.infiniteLoop = infiniteLoop;
@@ -29,19 +38,19 @@ class Firestore {
   setDbRef() {
     this.dbRef = this.firebase
       .firestore()
-      .collection('messages')
+      .collection(this.collectionName)
       .orderBy('timestamp', 'desc')
       .limit(this.stockNumber);
   }
 
   setListener() {
-    this.unsubscribe = this.dbRef.onSnapshot(snapshot => {
-      const messages = snapshot.docs.map(doc => doc.data());
+    this.unsubscribe = this.dbRef.onSnapshot((snapshot) => {
+      const messages = snapshot.docs.map((doc) => doc.data());
       this.addMessage(messages[0]);
       this.addStock(messages);
       this.addSavedStock(messages);
     });
-    const removeListener = e => {
+    const removeListener = (e) => {
       console.log('unsubscribe');
       this.unsubscribe();
       removeMessage();
@@ -127,8 +136,16 @@ function removeMessage() {
 
 function excute(e) {
   try {
-    const { apiKey, projectId, displayTime, stockNumber, infiniteLoop } = e.detail;
-    new Firestore({ firebase, apiKey, projectId, displayTime, stockNumber, infiniteLoop });
+    const { apiKey, projectId, collectionName, displayTime, stockNumber, infiniteLoop } = e.detail;
+    new Firestore({
+      firebase,
+      apiKey,
+      projectId,
+      collectionName,
+      displayTime,
+      stockNumber,
+      infiniteLoop,
+    });
   } catch (e) {
     console.log(e);
   }

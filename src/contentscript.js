@@ -6,7 +6,7 @@ const urlList = ['src/libs/firebase-app.js', 'src/libs/firebase-firestore.js', '
 function injectScripts(src) {
   const s = document.createElement('script');
   s.src = chrome.runtime.getURL(src);
-  s.onload = function() {
+  s.onload = function () {
     this.remove();
     const event = new Event('script-loaded');
     document.dispatchEvent(event);
@@ -20,11 +20,11 @@ function main() {
     count += 1;
     if (count === urlList.length) onInit();
   });
-  urlList.forEach(src => injectScripts(src));
+  urlList.forEach((src) => injectScripts(src));
 }
 
 function onInit() {
-  chrome.storage.sync.get('checked', function({ checked }) {
+  chrome.storage.sync.get('checked', function ({ checked }) {
     const { hostname } = location;
     onMessage({ isChecked: checked && checked[hostname] });
   });
@@ -32,11 +32,27 @@ function onInit() {
 
 function onMessage({ isChecked }) {
   chrome.storage.sync.get(
-    ['checked', 'apiKey', 'projectId', 'displayTime', 'stockNumber', 'infiniteLoop'],
-    function({ checked, apiKey, projectId, displayTime, stockNumber, infiniteLoop }) {
+    [
+      'checked',
+      'apiKey',
+      'projectId',
+      'collectionName',
+      'displayTime',
+      'stockNumber',
+      'infiniteLoop',
+    ],
+    function ({
+      checked,
+      apiKey,
+      projectId,
+      collectionName,
+      displayTime,
+      stockNumber,
+      infiniteLoop,
+    }) {
       const eventName = isChecked ? 'subscribe-firestore' : 'unsubscribe-firestore';
       const event = new CustomEvent(eventName, {
-        detail: { apiKey, projectId, displayTime, stockNumber, infiniteLoop },
+        detail: { apiKey, projectId, collectionName, displayTime, stockNumber, infiniteLoop },
       });
       document.dispatchEvent(event);
 
